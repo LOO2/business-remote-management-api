@@ -9,13 +9,15 @@ import (
 )
 
 func ShowAllCost(c *gin.Context) {
+
 	db := database.GetDatabase()
 	var p []models.Cost
-	err := db.Find(&p).Error
+	err := db.Preload("CostCategory").Find(&p).Error
+	//err := db.Find(&p).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find revenue: " + err.Error(),
+			"error": "cannot find cost: " + err.Error(),
 		})
 		return
 	}
