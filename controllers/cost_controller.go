@@ -38,7 +38,7 @@ func ShowCost(c *gin.Context) {
 
 	db := database.GetDatabase()
 	var p models.Cost
-	err = db.First(&p, newid).Error
+	err = db.Preload("CostCategory").Preload("CostProvider").First(&p, newid).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
