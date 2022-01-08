@@ -12,7 +12,7 @@ type Provider struct {
 	Cnpj      int            `json:"cnpj"`
 	Telephone int            `json:"telephone"`
 	Email     string         `json:"email"`
-	CreatedAt time.Time      `json:"created"`
-	UpdatedAt time.Time      `json:"updated"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted"`
+	CreatedAt time.Time      `json:"-"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }

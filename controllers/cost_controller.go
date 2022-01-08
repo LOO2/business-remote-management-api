@@ -12,7 +12,7 @@ func ShowAllCost(c *gin.Context) {
 
 	db := database.GetDatabase()
 	var p []models.Cost
-	err := db.Preload("CostCategory").Find(&p).Error
+	err := db.Preload("CostCategory").Preload("CostProvider").Find(&p).Error
 	//err := db.Find(&p).Error
 
 	if err != nil {
