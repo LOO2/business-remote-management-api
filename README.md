@@ -1,4 +1,4 @@
-# WEBAPI with GOLANG
+# Business Remote API
 
 ### API Docs
 
@@ -10,7 +10,7 @@
 $ docker-compose up --build
 ```
 
-### Run Database
+### Run Application
 
 ```
 $ go run main.go
