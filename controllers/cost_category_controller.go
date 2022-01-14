@@ -40,7 +40,7 @@ func ShowCostCategory(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find product by id: " + err.Error(),
+			"error": "cannot find cost category by id: " + err.Error(),
 		})
 		return
 	}
@@ -64,7 +64,7 @@ func CreateCostCategory(c *gin.Context) {
 	err = db.Create(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create revenue: " + err.Error(),
+			"error": "cannot create cost category: " + err.Error(),
 		})
 		return
 	}
@@ -88,7 +88,7 @@ func UpdateCostCategory(c *gin.Context) {
 	err = db.Save(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create book: " + err.Error(),
+			"error": "cannot create cost category: " + err.Error(),
 		})
 		return
 	}
@@ -113,7 +113,7 @@ func DeleteCostCategory(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot delete revenue: " + err.Error(),
+			"error": "cannot delete cost category: " + err.Error(),
 		})
 		return
 	}

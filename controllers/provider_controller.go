@@ -8,16 +8,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ShowAllCost(c *gin.Context) {
-
+func ShowAllProvider(c *gin.Context) {
 	db := database.GetDatabase()
-	var p []models.Cost
-	err := db.Preload("CostCategory").Preload("CostProvider").Find(&p).Error
-	//err := db.Find(&p).Error
+	var p []models.Provider
+	err := db.Find(&p).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find cost: " + err.Error(),
+			"error": "cannot find provider: " + err.Error(),
 		})
 		return
 	}
@@ -25,7 +23,7 @@ func ShowAllCost(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func ShowCost(c *gin.Context) {
+func ShowProviders(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
 
@@ -37,12 +35,12 @@ func ShowCost(c *gin.Context) {
 	}
 
 	db := database.GetDatabase()
-	var p models.Cost
-	err = db.Preload("CostCategory").Preload("CostProvider").First(&p, newid).Error
+	var p models.Provider
+	err = db.First(&p, newid).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find cost by id: " + err.Error(),
+			"error": "cannot find provider by id: " + err.Error(),
 		})
 		return
 	}
@@ -50,10 +48,10 @@ func ShowCost(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func CreateCost(c *gin.Context) {
+func CreateProvider(c *gin.Context) {
 	db := database.GetDatabase()
 
-	var p models.Cost
+	var p models.Provider
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -66,7 +64,7 @@ func CreateCost(c *gin.Context) {
 	err = db.Create(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create cost: " + err.Error(),
+			"error": "cannot create provider: " + err.Error(),
 		})
 		return
 	}
@@ -74,10 +72,10 @@ func CreateCost(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func UpdateCost(c *gin.Context) {
+func UpdateProvider(c *gin.Context) {
 	db := database.GetDatabase()
 
-	var p models.Cost
+	var p models.Provider
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -90,7 +88,7 @@ func UpdateCost(c *gin.Context) {
 	err = db.Save(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create cost: " + err.Error(),
+			"error": "cannot create provider: " + err.Error(),
 		})
 		return
 	}
@@ -98,7 +96,7 @@ func UpdateCost(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func DeleteCost(c *gin.Context) {
+func DeleteProvider(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
 
@@ -111,11 +109,11 @@ func DeleteCost(c *gin.Context) {
 
 	db := database.GetDatabase()
 
-	err = db.Delete(&models.Cost{}, newid).Error
+	err = db.Delete(&models.Provider{}, newid).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot delete cost: " + err.Error(),
+			"error": "cannot delete provider: " + err.Error(),
 		})
 		return
 	}
