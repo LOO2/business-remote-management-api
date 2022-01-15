@@ -8,14 +8,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ShowAllProvider(c *gin.Context) {
+func ShowAllUsers(c *gin.Context) {
 	db := database.GetDatabase()
-	var p []models.Provider
+	var p []models.User
 	err := db.Find(&p).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find revenue: " + err.Error(),
+			"error": "cannot find user: " + err.Error(),
 		})
 		return
 	}
@@ -23,7 +23,7 @@ func ShowAllProvider(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func ShowProviders(c *gin.Context) {
+func ShowUser(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
 
@@ -35,12 +35,12 @@ func ShowProviders(c *gin.Context) {
 	}
 
 	db := database.GetDatabase()
-	var p models.Provider
+	var p models.User
 	err = db.First(&p, newid).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find product by id: " + err.Error(),
+			"error": "cannot find user by id: " + err.Error(),
 		})
 		return
 	}
@@ -48,10 +48,10 @@ func ShowProviders(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func CreateProvider(c *gin.Context) {
+func CreateUser(c *gin.Context) {
 	db := database.GetDatabase()
 
-	var p models.Provider
+	var p models.User
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -64,7 +64,7 @@ func CreateProvider(c *gin.Context) {
 	err = db.Create(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create revenue: " + err.Error(),
+			"error": "cannot create user: " + err.Error(),
 		})
 		return
 	}
@@ -72,10 +72,10 @@ func CreateProvider(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func UpdateProvider(c *gin.Context) {
+func UpdateUser(c *gin.Context) {
 	db := database.GetDatabase()
 
-	var p models.Provider
+	var p models.User
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -88,7 +88,7 @@ func UpdateProvider(c *gin.Context) {
 	err = db.Save(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create book: " + err.Error(),
+			"error": "cannot create user: " + err.Error(),
 		})
 		return
 	}
@@ -96,7 +96,7 @@ func UpdateProvider(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func DeleteProvider(c *gin.Context) {
+func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
 
@@ -109,11 +109,11 @@ func DeleteProvider(c *gin.Context) {
 
 	db := database.GetDatabase()
 
-	err = db.Delete(&models.Provider{}, newid).Error
+	err = db.Delete(&models.User{}, newid).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot delete revenue: " + err.Error(),
+			"error": "cannot delete user: " + err.Error(),
 		})
 		return
 	}

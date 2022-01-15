@@ -40,7 +40,7 @@ func ShowRevenue(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find product by id: " + err.Error(),
+			"error": "cannot find revenue by id: " + err.Error(),
 		})
 		return
 	}
@@ -88,7 +88,7 @@ func UpdateRevenue(c *gin.Context) {
 	err = db.Save(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create book: " + err.Error(),
+			"error": "cannot create revenue: " + err.Error(),
 		})
 		return
 	}
