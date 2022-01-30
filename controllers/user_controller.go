@@ -6,7 +6,18 @@ import (
 	"github.com/LOO2/business-remote-management-api/database"
 	"github.com/LOO2/business-remote-management-api/models"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
+}
 
 func ShowAllUsers(c *gin.Context) {
 	db := database.GetDatabase()
@@ -52,6 +63,17 @@ func CreateUser(c *gin.Context) {
 	db := database.GetDatabase()
 
 	var p models.User
+
+	var encriptPassword string
+
+	encriptPassword, error := HashPassword(p.Password)
+	if error != nil {
+		c.JSON(400, gin.H{
+			"error": "cannot hash password: " + error.Error(),
+		})
+		return
+	}
+	p.Password = encriptPassword
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {

@@ -8,13 +8,13 @@ import (
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	main := router.Group("/")
 	{
-		revenues := main.Group("revenue")
+		revenue := main.Group("revenue")
 		{
-			revenues.GET("/", controllers.ShowAllRevenues)
-			revenues.GET("/:id", controllers.ShowRevenue)
-			revenues.POST("/", controllers.CreateRevenue)
-			revenues.PUT("/", controllers.UpdateRevenue)
-			revenues.DELETE("/:id", controllers.DeleteRevenue)
+			revenue.GET("/", controllers.ShowAllRevenues)
+			revenue.GET("/:id", controllers.ShowRevenue)
+			revenue.POST("/", controllers.CreateRevenue)
+			revenue.PUT("/", controllers.UpdateRevenue)
+			revenue.DELETE("/:id", controllers.DeleteRevenue)
 		}
 
 		cost_category := main.Group("cost_category")
@@ -41,6 +41,14 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 			cost.POST("/", controllers.CreateCost)
 			cost.PUT("/", controllers.UpdateCost)
 			cost.DELETE("/:id", controllers.DeleteCost)
+		}
+		user := main.Group("user")
+		{
+			user.GET("/", controllers.ShowAllUsers)
+			user.GET("/:id", controllers.ShowUser)
+			user.POST("/", controllers.CreateUser)
+			user.PUT("/", controllers.UpdateUser)
+			user.DELETE("/:id", controllers.DeleteUser)
 		}
 	}
 

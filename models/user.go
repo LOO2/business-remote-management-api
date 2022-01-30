@@ -9,6 +9,7 @@ import (
 type User struct {
 	ID        uint           `json:"id" gorm:"primaryKey"`
 	Name      string         `json:"name"`
+	Password  string         `json:"password"`
 	Cpf       int            `json:"cnpj"`
 	Telephone int            `json:"telephone"`
 	Email     string         `json:"email"`
