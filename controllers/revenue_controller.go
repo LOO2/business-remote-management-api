@@ -3,8 +3,8 @@ package controllers
 import (
 	"strconv"
 
+	models "github.com/LOO2/business-remote-management-api/Entity"
 	"github.com/LOO2/business-remote-management-api/database"
-	"github.com/LOO2/business-remote-management-api/models"
 	"github.com/gin-gonic/gin"
 )
 
