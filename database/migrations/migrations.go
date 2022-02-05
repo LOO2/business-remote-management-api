@@ -1,7 +1,7 @@
 package migrations
 
 import (
-	models "github.com/LOO2/business-remote-management-api/Entity"
+	models "github.com/LOO2/business-remote-management-api/domain"
 	"gorm.io/gorm"
 )
 
