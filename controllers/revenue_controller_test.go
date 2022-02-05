@@ -1,30 +1,20 @@
-package controllers_test
+package controllers
 
 import (
-	"net/http"
 	"testing"
 
-	"github.com/steinfletcher/apitest"
+	"github.com/LOO2/business-remote-management-api/database"
+	models "github.com/LOO2/business-remote-management-api/domain"
 )
 
 func TestShowAllRevenues(t *testing.T) {
-	handler := func(w http.ResponseWriter, r *http.Request) {
-		msg := `{
-				"debit"  : 1.0,
-				"credit" : 2.0
-			}`
-		_, _ = w.Write([]byte(msg))
-		w.WriteHeader(http.StatusOK)
-	}
+	database.StartDB()
+	db := database.GetDatabase()
 
-	apitest.New().
-		HandlerFunc(handler).
-		Get("/revenue").
-		Expect(t).
-		Body(`{
-			"debit"  : 1.0,
-			"credit" : 2.0
-		}`).
-		Status(http.StatusOK).
-		End()
+	var p []models.Revenue
+	err := db.Find(&p).Error
+
+	if err != nil {
+		t.Errorf("cannot find revenue: " + err.Error())
+	}
 }
