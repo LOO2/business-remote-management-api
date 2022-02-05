@@ -3,8 +3,8 @@ package controllers
 import (
 	"strconv"
 
-	models "github.com/LOO2/business-remote-management-api/Entity"
 	"github.com/LOO2/business-remote-management-api/database"
+	models "github.com/LOO2/business-remote-management-api/domain"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
