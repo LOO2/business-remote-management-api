@@ -49,9 +49,7 @@ func ShowAllRevenues(c *gin.Context) {
 		})
 		return
 	}
-
 	c.JSON(200, p)
-
 }
 
 func ShowRevenue(c *gin.Context) {
