@@ -2,19 +2,20 @@ package routes
 
 import (
 	"github.com/LOO2/business-remote-management-api/controllers"
+	"github.com/LOO2/business-remote-management-api/revenue/delivery"
 	"github.com/gin-gonic/gin"
 )
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
-	main := router.Group("/")
+	main := router.Group("/api")
 	{
 		revenue := main.Group("revenue")
 		{
-			revenue.GET("/", controllers.ShowAllRevenues)
-			revenue.GET("/:id", controllers.ShowRevenue)
-			revenue.POST("/", controllers.CreateRevenue)
-			revenue.PUT("/", controllers.UpdateRevenue)
-			revenue.DELETE("/:id", controllers.DeleteRevenue)
+			revenue.GET("/", delivery.ShowAllRevenues)
+			revenue.GET("/:id", delivery.ShowRevenue)
+			revenue.POST("/", delivery.CreateRevenue)
+			revenue.PUT("/", delivery.UpdateRevenue)
+			revenue.DELETE("/:id", delivery.DeleteRevenue)
 		}
 
 		cost_category := main.Group("cost_category")
