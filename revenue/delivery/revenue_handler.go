@@ -26,7 +26,7 @@ type Config struct {
 
 // NewRevenueleHandler will initialize the revenue/ resources endpoint
 func NewRevenueHandler(c *Config) {
-	//h := &RevenueHandler{}
+	//handler := &RevenueHandler{}
 
 	groupRoute := c.R.Group("/api")
 	{
@@ -44,9 +44,7 @@ func ShowAllRevenues(c *gin.Context) {
 	err := db.Find(&p).Error
 
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot find revenue: " + err.Error(),
-		})
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 		return
 	}
 	c.JSON(200, p)
@@ -57,9 +55,7 @@ func ShowRevenue(c *gin.Context) {
 	newid, err := strconv.Atoi(id)
 
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "ID has to be integer",
-		})
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 		return
 	}
 
@@ -68,13 +64,11 @@ func ShowRevenue(c *gin.Context) {
 	err = db.First(&p, newid).Error
 
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot find revenue by id: " + err.Error(),
-		})
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, p)
 }
 
 func CreateRevenue(c *gin.Context) {
@@ -84,21 +78,17 @@ func CreateRevenue(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot bind JSON: " + err.Error(),
-		})
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 		return
 	}
 
 	err = db.Create(&p).Error
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot create revenue: " + err.Error(),
-		})
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, p)
 }
 
 func UpdateRevenue(c *gin.Context) {
@@ -108,21 +98,17 @@ func UpdateRevenue(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot bind JSON: " + err.Error(),
-		})
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 		return
 	}
 
 	err = db.Save(&p).Error
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot create revenue: " + err.Error(),
-		})
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, p)
 }
 
 func DeleteRevenue(c *gin.Context) {
@@ -130,9 +116,7 @@ func DeleteRevenue(c *gin.Context) {
 	newid, err := strconv.Atoi(id)
 
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "ID has to be integer",
-		})
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 		return
 	}
 
@@ -141,13 +125,11 @@ func DeleteRevenue(c *gin.Context) {
 	err = db.Delete(&models.Revenue{}, newid).Error
 
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot delete revenue: " + err.Error(),
-		})
+		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 		return
 	}
 
-	c.Status(204)
+	c.Status(http.StatusCreated)
 }
 
 func getStatusCode(err error) int {
