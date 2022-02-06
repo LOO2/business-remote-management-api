@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/LOO2/business-remote-management-api/controllers"
 	"github.com/LOO2/business-remote-management-api/database"
 	models "github.com/LOO2/business-remote-management-api/domain"
 	"github.com/gin-gonic/gin"
@@ -33,7 +32,7 @@ func NewRevenueHandler(c *Config) {
 	{
 		revenueRoute := groupRoute.Group("revenue")
 		{
-			revenueRoute.GET("/", controllers.ShowAllRevenues)
+			revenueRoute.GET("/", ShowAllRevenues)
 		}
 	}
 
