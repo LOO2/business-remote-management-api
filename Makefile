@@ -12,6 +12,10 @@ unittest:
 clean:
 	if [ -f ${BINARY} ] ; then rm ${BINARY} ; fi
 
+tidy:
+	go mod tidy
+	go mod vendor
+
 run:
 	docker-compose up --build -d
 	go run app/main.go
