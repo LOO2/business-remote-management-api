@@ -20,11 +20,11 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 		cost_category := main.Group("cost_category")
 		{
-			cost_category.GET("/", controllers.ShowAllCostCategories)
-			cost_category.GET("/:id", controllers.ShowCostCategory)
-			cost_category.POST("/", controllers.CreateCostCategory)
-			cost_category.PUT("/", controllers.UpdateCostCategory)
-			cost_category.DELETE("/:id", controllers.DeleteCostCategory)
+			cost_category.GET("/", delivery.ShowAllCostCategories)
+			cost_category.GET("/:id", delivery.ShowCostCategory)
+			cost_category.POST("/", delivery.CreateCostCategory)
+			cost_category.PUT("/", delivery.UpdateCostCategory)
+			cost_category.DELETE("/:id", delivery.DeleteCostCategory)
 		}
 
 		provider := main.Group("provider")

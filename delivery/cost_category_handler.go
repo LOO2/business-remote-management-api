@@ -1,7 +1,6 @@
 package delivery
 
 import (
-	"net/http"
 	"strconv"
 
 	"github.com/LOO2/business-remote-management-api/database"
@@ -10,17 +9,17 @@ import (
 )
 
 // represent the httphandler
-type ProviderHandler struct {
-	AUsecase models.ProviderUsecase
+type CostCategoryHandler struct {
+	AUsecase models.CostCategoryUsecase
 }
 
 // will initialize the resources endpoint
-func NewProviderHandler(c *gin.Engine) {
-	//handler := &RevenueHandler{}
+func NewCostCategoryHandler(c *gin.Engine) {
+	//handler := &CostCategoryHandler{}
 
 	groupRoute := c.Group("/api")
 	{
-		revenueRoute := groupRoute.Group("revenue")
+		revenueRoute := groupRoute.Group("cost_category")
 		{
 			revenueRoute.GET("/", ShowAllProviders)
 		}
@@ -28,39 +27,14 @@ func NewProviderHandler(c *gin.Engine) {
 
 }
 
-func ShowAllProviders(c *gin.Context) {
+func ShowAllCostCategories(c *gin.Context) {
 	db := database.GetDatabase()
-	var p []models.Provider
+	var p []models.CostCategory
 	err := db.Find(&p).Error
 
 	if err != nil {
-		c.JSON(404, gin.H{
-			"error": "cannot find provider by id: " + err.Error(),
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, p)
-}
-
-func ShowProviders(c *gin.Context) {
-	id := c.Param("id")
-	newid, err := strconv.Atoi(id)
-
-	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot bind JSON: " + err.Error(),
-		})
-		return
-	}
-
-	db := database.GetDatabase()
-	var p models.Provider
-	err = db.First(&p, newid).Error
-
-	if err != nil {
-		c.JSON(404, gin.H{
-			"error": "cannot find provider by id: " + err.Error(),
+			"error": "cannot find revenue: " + err.Error(),
 		})
 		return
 	}
@@ -68,10 +42,35 @@ func ShowProviders(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func CreateProvider(c *gin.Context) {
+func ShowCostCategory(c *gin.Context) {
+	id := c.Param("id")
+	newid, err := strconv.Atoi(id)
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "ID has to be integer",
+		})
+		return
+	}
+
+	db := database.GetDatabase()
+	var p models.CostCategory
+	err = db.First(&p, newid).Error
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "cannot find cost category by id: " + err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, p)
+}
+
+func CreateCostCategory(c *gin.Context) {
 	db := database.GetDatabase()
 
-	var p models.Provider
+	var p models.CostCategory
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -84,7 +83,7 @@ func CreateProvider(c *gin.Context) {
 	err = db.Create(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create provider: " + err.Error(),
+			"error": "cannot create cost category: " + err.Error(),
 		})
 		return
 	}
@@ -92,10 +91,10 @@ func CreateProvider(c *gin.Context) {
 	c.JSON(201, p)
 }
 
-func UpdateProvider(c *gin.Context) {
+func UpdateCostCategory(c *gin.Context) {
 	db := database.GetDatabase()
 
-	var p models.Provider
+	var p models.CostCategory
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -107,8 +106,8 @@ func UpdateProvider(c *gin.Context) {
 
 	err = db.Save(&p).Error
 	if err != nil {
-		c.JSON(404, gin.H{
-			"error": "cannot update provider by ID: " + err.Error(),
+		c.JSON(400, gin.H{
+			"error": "cannot create cost category: " + err.Error(),
 		})
 		return
 	}
@@ -116,7 +115,7 @@ func UpdateProvider(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func DeleteProvider(c *gin.Context) {
+func DeleteCostCategory(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
 
@@ -129,11 +128,11 @@ func DeleteProvider(c *gin.Context) {
 
 	db := database.GetDatabase()
 
-	err = db.Delete(&models.Provider{}, newid).Error
+	err = db.Delete(&models.CostCategory{}, newid).Error
 
 	if err != nil {
-		c.JSON(404, gin.H{
-			"error": "cannot find provider by id: " + err.Error(),
+		c.JSON(400, gin.H{
+			"error": "cannot delete cost category: " + err.Error(),
 		})
 		return
 	}
