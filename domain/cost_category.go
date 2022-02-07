@@ -1,6 +1,7 @@
 package models
 
 import (
+	"context"
 	"time"
 
 	"gorm.io/gorm"
@@ -12,4 +13,12 @@ type CostCategory struct {
 	CreatedAt time.Time      `json:"-"`
 	UpdatedAt time.Time      `json:"-"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+}
+
+type CostCategoryUsecase interface {
+	GetByID(ctx context.Context, id int64) (CostCategory, error)
+}
+
+type CostCategoryRepository interface {
+	GetByID(ctx context.Context, id int64) (CostCategory, error)
 }
