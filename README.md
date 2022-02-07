@@ -7,13 +7,13 @@
 ### Run Database
 
 ```
-$ docker-compose up --build
+$ make docker
 ```
 
 ### Run Application
 
 ```
-$ go run main.go
+$ make run
 ```
 
 ### Migrations
@@ -25,5 +25,5 @@ $ go run main.go
 - Run seeds is manual, you have to run
 
 ```
-$ go run database/seeder/main.go
+$ make seed
 ```

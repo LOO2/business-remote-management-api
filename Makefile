@@ -5,6 +5,8 @@ test:
 engine:
 	go build -o ${BINARY} app/*.go
 
+docker:
+	docker-compose up --build -d
 
 unittest:
 	go test -short  ./...
@@ -29,5 +31,8 @@ lint-prepare:
 
 lint:
 	./bin/golangci-lint run ./...
+
+seed:
+	go run database/seeder/main.go
 
 .PHONY: clean install unittest build docker run stop vendor lint-prepare lint
