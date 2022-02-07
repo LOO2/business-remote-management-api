@@ -15,10 +15,10 @@ type ProviderHandler struct {
 }
 
 // will initialize the revenue/ resources endpoint
-func NewProviderHandler(c *Config) {
+func NewProviderHandler(c *gin.Engine) {
 	//handler := &RevenueHandler{}
 
-	groupRoute := c.R.Group("/api")
+	groupRoute := c.Group("/api")
 	{
 		revenueRoute := groupRoute.Group("revenue")
 		{

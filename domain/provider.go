@@ -18,12 +18,10 @@ type Provider struct {
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
-// RevenueUsecase represent the revenue's usecases
 type ProviderUsecase interface {
-	GetByID(ctx context.Context, id int64) (Revenue, error)
+	GetByID(ctx context.Context, id int64) (Provider, error)
 }
 
-// RevenueRepository represent the revenue's repository contract
 type ProviderRepository interface {
-	GetByID(ctx context.Context, id int64) (Revenue, error)
+	GetByID(ctx context.Context, id int64) (Provider, error)
 }
