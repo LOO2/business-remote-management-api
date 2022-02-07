@@ -7,21 +7,11 @@ import (
 	"github.com/LOO2/business-remote-management-api/database"
 	models "github.com/LOO2/business-remote-management-api/domain"
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 )
-
-// ResponseError represent the reseponse error struct
-type ResponseError struct {
-	Message string `json:"message"`
-}
 
 // RevenueHandler  represent the httphandler for revenue
 type RevenueHandler struct {
 	AUsecase models.RevenueUsecase
-}
-
-type Config struct {
-	R *gin.Engine
 }
 
 // NewRevenueleHandler will initialize the revenue/ resources endpoint
@@ -44,10 +34,12 @@ func ShowAllRevenues(c *gin.Context) {
 	err := db.Find(&p).Error
 
 	if err != nil {
-		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		c.JSON(400, gin.H{
+			"error": "cannot bind JSON: " + err.Error(),
+		})
 		return
 	}
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, p)
 }
 
 func ShowRevenue(c *gin.Context) {
@@ -55,7 +47,9 @@ func ShowRevenue(c *gin.Context) {
 	newid, err := strconv.Atoi(id)
 
 	if err != nil {
-		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		c.JSON(400, gin.H{
+			"error": "cannot bind JSON: " + err.Error(),
+		})
 		return
 	}
 
@@ -64,7 +58,9 @@ func ShowRevenue(c *gin.Context) {
 	err = db.First(&p, newid).Error
 
 	if err != nil {
-		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		c.JSON(404, gin.H{
+			"error": "cannot find revenue by ID: " + err.Error(),
+		})
 		return
 	}
 
@@ -78,13 +74,17 @@ func CreateRevenue(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
-		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		c.JSON(400, gin.H{
+			"error": "cannot bind JSON: " + err.Error(),
+		})
 		return
 	}
 
 	err = db.Create(&p).Error
 	if err != nil {
-		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		c.JSON(400, gin.H{
+			"error": "cannot create revenue: " + err.Error(),
+		})
 		return
 	}
 
@@ -98,13 +98,17 @@ func UpdateRevenue(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
-		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		c.JSON(400, gin.H{
+			"error": "cannot bind JSON: " + err.Error(),
+		})
 		return
 	}
 
 	err = db.Save(&p).Error
 	if err != nil {
-		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		c.JSON(400, gin.H{
+			"error": "cannot save revenue: " + err.Error(),
+		})
 		return
 	}
 
@@ -116,7 +120,9 @@ func DeleteRevenue(c *gin.Context) {
 	newid, err := strconv.Atoi(id)
 
 	if err != nil {
-		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		c.JSON(400, gin.H{
+			"error": "cannot bind JSON: " + err.Error(),
+		})
 		return
 	}
 
@@ -125,27 +131,11 @@ func DeleteRevenue(c *gin.Context) {
 	err = db.Delete(&models.Revenue{}, newid).Error
 
 	if err != nil {
-		c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		c.JSON(404, gin.H{
+			"error": "cannot find revenue by id: " + err.Error(),
+		})
 		return
 	}
 
 	c.Status(http.StatusCreated)
-}
-
-func getStatusCode(err error) int {
-	if err == nil {
-		return http.StatusOK
-	}
-
-	logrus.Error(err)
-	switch err {
-	case models.ErrInternalServerError:
-		return http.StatusInternalServerError
-	case models.ErrNotFound:
-		return http.StatusNotFound
-	case models.ErrConflict:
-		return http.StatusConflict
-	default:
-		return http.StatusInternalServerError
-	}
 }
