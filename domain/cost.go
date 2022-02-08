@@ -1,6 +1,7 @@
 package models
 
 import (
+	"context"
 	"time"
 
 	"gorm.io/gorm"
@@ -18,4 +19,12 @@ type Cost struct {
 	CreatedAt      time.Time      `json:"-"`
 	UpdatedAt      time.Time      `json:"-"`
 	DeletedAt      gorm.DeletedAt `gorm:"index" json:"-"`
+}
+
+type CostUsecase interface {
+	GetByID(ctx context.Context, id int64) (Cost, error)
+}
+
+type CostRepository interface {
+	GetByID(ctx context.Context, id int64) (Cost, error)
 }

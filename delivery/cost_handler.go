@@ -1,4 +1,4 @@
-package controllers
+package delivery
 
 import (
 	"strconv"
@@ -6,27 +6,37 @@ import (
 	"github.com/LOO2/business-remote-management-api/database"
 	models "github.com/LOO2/business-remote-management-api/domain"
 	"github.com/gin-gonic/gin"
-	"golang.org/x/crypto/bcrypt"
 )
 
-func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
+// represent the httphandler
+type CostHandler struct {
+	AUsecase models.CostUsecase
 }
 
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
+// will initialize the resources endpoint
+func NewCostHandler(c *gin.Engine) {
+	//handler := &CostHandler{}
+
+	groupRoute := c.Group("/api")
+	{
+		costRoute := groupRoute.Group("revenue")
+		{
+			costRoute.GET("/", ShowAllCosts)
+		}
+	}
+
 }
 
-func ShowAllUsers(c *gin.Context) {
+func ShowAllCosts(c *gin.Context) {
+
 	db := database.GetDatabase()
-	var p []models.User
-	err := db.Find(&p).Error
+	var p []models.Cost
+	err := db.Preload("CostCategory").Preload("CostProvider").Find(&p).Error
+	//err := db.Find(&p).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find user: " + err.Error(),
+			"error": "cannot find cost: " + err.Error(),
 		})
 		return
 	}
@@ -34,7 +44,7 @@ func ShowAllUsers(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func ShowUser(c *gin.Context) {
+func ShowCost(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
 
@@ -46,12 +56,12 @@ func ShowUser(c *gin.Context) {
 	}
 
 	db := database.GetDatabase()
-	var p models.User
-	err = db.First(&p, newid).Error
+	var p models.Cost
+	err = db.Preload("CostCategory").Preload("CostProvider").First(&p, newid).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find user by id: " + err.Error(),
+			"error": "cannot find cost by id: " + err.Error(),
 		})
 		return
 	}
@@ -59,21 +69,10 @@ func ShowUser(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func CreateUser(c *gin.Context) {
+func CreateCost(c *gin.Context) {
 	db := database.GetDatabase()
 
-	var p models.User
-
-	var encriptPassword string
-
-	encriptPassword, error := HashPassword(p.Password)
-	if error != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot hash password: " + error.Error(),
-		})
-		return
-	}
-	p.Password = encriptPassword
+	var p models.Cost
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -86,7 +85,7 @@ func CreateUser(c *gin.Context) {
 	err = db.Create(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create user: " + err.Error(),
+			"error": "cannot create cost: " + err.Error(),
 		})
 		return
 	}
@@ -94,10 +93,10 @@ func CreateUser(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func UpdateUser(c *gin.Context) {
+func UpdateCost(c *gin.Context) {
 	db := database.GetDatabase()
 
-	var p models.User
+	var p models.Cost
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -110,7 +109,7 @@ func UpdateUser(c *gin.Context) {
 	err = db.Save(&p).Error
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create user: " + err.Error(),
+			"error": "cannot create cost: " + err.Error(),
 		})
 		return
 	}
@@ -118,7 +117,7 @@ func UpdateUser(c *gin.Context) {
 	c.JSON(200, p)
 }
 
-func DeleteUser(c *gin.Context) {
+func DeleteCost(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
 
@@ -131,11 +130,11 @@ func DeleteUser(c *gin.Context) {
 
 	db := database.GetDatabase()
 
-	err = db.Delete(&models.User{}, newid).Error
+	err = db.Delete(&models.Cost{}, newid).Error
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot delete user: " + err.Error(),
+			"error": "cannot delete cost: " + err.Error(),
 		})
 		return
 	}
