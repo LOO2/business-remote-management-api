@@ -1,4 +1,4 @@
-package controllers
+package delivery
 
 import (
 	"strconv"
@@ -8,7 +8,26 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ShowAllCost(c *gin.Context) {
+// represent the httphandler
+type CostHandler struct {
+	AUsecase models.CostUsecase
+}
+
+// will initialize the resources endpoint
+func NewCostHandler(c *gin.Engine) {
+	//handler := &CostHandler{}
+
+	groupRoute := c.Group("/api")
+	{
+		costRoute := groupRoute.Group("revenue")
+		{
+			costRoute.GET("/", ShowAllCosts)
+		}
+	}
+
+}
+
+func ShowAllCosts(c *gin.Context) {
 
 	db := database.GetDatabase()
 	var p []models.Cost
