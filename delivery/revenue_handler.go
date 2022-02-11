@@ -35,7 +35,7 @@ func GetAll(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot bind JSON " + err.Error(),
+			"error": "cannot find revenue " + err.Error(),
 		})
 		return
 	}
@@ -54,9 +54,7 @@ func ShowRevenue(c *gin.Context) {
 		return
 	}
 
-	db := database.GetDatabase()
-	var p models.Revenue
-	err = db.First(&p, newid).Error
+	result, err := repository.GetById(newid)
 
 	if err != nil {
 		c.JSON(404, gin.H{
@@ -65,7 +63,7 @@ func ShowRevenue(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, p)
+	c.JSON(http.StatusOK, result)
 }
 
 func CreateRevenue(c *gin.Context) {

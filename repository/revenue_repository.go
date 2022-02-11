@@ -11,6 +11,7 @@ type Revenue struct {
 
 type RevenueRepository interface {
 	GetAll() (*Revenue, error)
+	GetById() (*Revenue, error)
 }
 
 func GetAll() (*Revenue, error) {
@@ -20,6 +21,21 @@ func GetAll() (*Revenue, error) {
 	db := database.GetDatabase()
 
 	err := db.Find(&p).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return p, nil
+}
+
+func GetById(id int) (*Revenue, error) {
+
+	var p *Revenue
+
+	db := database.GetDatabase()
+
+	err := db.First(&p, id).Error
 
 	if err != nil {
 		return nil, err
