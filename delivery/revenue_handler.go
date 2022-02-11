@@ -6,6 +6,7 @@ import (
 
 	"github.com/LOO2/business-remote-management-api/database"
 	models "github.com/LOO2/business-remote-management-api/domain"
+	"github.com/LOO2/business-remote-management-api/repository"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,24 +23,24 @@ func NewRevenueHandler(c *gin.Engine) {
 	{
 		revenueRoute := groupRoute.Group("revenue")
 		{
-			revenueRoute.GET("/", ShowAllRevenues)
+			revenueRoute.GET("/", GetAll)
 		}
 	}
 
 }
 
-func ShowAllRevenues(c *gin.Context) {
-	db := database.GetDatabase()
-	var p []models.Revenue
-	err := db.Find(&p).Error
+func GetAll(c *gin.Context) {
+
+	result, err := repository.GetAll()
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot bind JSON: " + err.Error(),
+			"error": "cannot bind JSON " + err.Error(),
 		})
 		return
 	}
-	c.JSON(http.StatusOK, p)
+
+	c.JSON(http.StatusOK, result)
 }
 
 func ShowRevenue(c *gin.Context) {
