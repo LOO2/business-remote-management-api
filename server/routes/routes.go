@@ -10,7 +10,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	{
 		revenue := main.Group("revenue")
 		{
-			revenue.GET("/", delivery.ShowAllRevenues)
+			revenue.GET("/", delivery.GetAll)
 			revenue.GET("/:id", delivery.ShowRevenue)
 			revenue.POST("/", delivery.CreateRevenue)
 			revenue.PUT("/", delivery.UpdateRevenue)
