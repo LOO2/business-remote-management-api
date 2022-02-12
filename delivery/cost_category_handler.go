@@ -31,7 +31,7 @@ func ShowCostCategory(c *gin.Context) {
 		return
 	}
 
-	result, err := repository.GetByIdCostCategory(newid)
+	result, err := repository.GetCostByIdCost(newid)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"error": "cannot find CostCategory by ID: " + err.Error(),

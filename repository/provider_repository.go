@@ -9,11 +9,11 @@ type Provider struct {
 	models.Provider
 }
 type ProviderRepository interface {
-	GetAll() (*[]Provider, error)
-	GetById() (*Provider, error)
-	Create(Provider) (*Provider, error)
-	Update(Provider) (*Provider, error)
-	Delete(Provider) error
+	GetAllProviders() (*[]Provider, error)
+	GetProviderById() (*Provider, error)
+	CreateProvider(Provider) (*Provider, error)
+	UpdateProvider(Provider) (*Provider, error)
+	DeleteProvider(Provider) error
 }
 
 func GetAllProviders() (*[]Provider, error) {
@@ -31,7 +31,7 @@ func GetAllProviders() (*[]Provider, error) {
 	return p, nil
 }
 
-func GetByIdProvider(id int) (*Provider, error) {
+func GetProviderById(id int) (*Provider, error) {
 
 	var p *Provider
 

@@ -21,7 +21,7 @@ func CheckPasswordHash(password, hash string) bool {
 
 func ShowAllUsers(c *gin.Context) {
 
-	result, err := repository.GetAllUser()
+	result, err := repository.GetAllUsers()
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot find User " + err.Error(),

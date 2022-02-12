@@ -31,7 +31,7 @@ func ShowProvider(c *gin.Context) {
 		return
 	}
 
-	result, err := repository.GetByIdProvider(newid)
+	result, err := repository.GetProviderById(newid)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"error": "cannot find provider by ID: " + err.Error(),

@@ -9,11 +9,11 @@ type CostCategory struct {
 	models.CostCategory
 }
 type CostCategoryRepository interface {
-	GetAll() (*[]CostCategory, error)
-	GetById() (*CostCategory, error)
-	Create(CostCategory) (*CostCategory, error)
-	Update(CostCategory) (*CostCategory, error)
-	Delete(CostCategory) error
+	GetAllCostCategories() (*[]CostCategory, error)
+	GetostCategoryByIdC() (*CostCategory, error)
+	CreateCostCategory(CostCategory) (*CostCategory, error)
+	UpdateCostCategory(CostCategory) (*CostCategory, error)
+	DeleteCostCategory(CostCategory) error
 }
 
 func GetAllCostCategories() (*[]CostCategory, error) {
@@ -31,7 +31,7 @@ func GetAllCostCategories() (*[]CostCategory, error) {
 	return p, nil
 }
 
-func GetByIdCostCategory(id int) (*CostCategory, error) {
+func GetostCategoryByIdC(id int) (*CostCategory, error) {
 
 	var p *CostCategory
 

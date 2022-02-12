@@ -10,14 +10,14 @@ type User struct {
 }
 
 type UserRepository interface {
-	GetAllUser() (*[]User, error)
+	GetAllUsers() (*[]User, error)
 	GetUserById() (*User, error)
 	CreateUser(User) (*User, error)
 	UpdateUser(User) (*User, error)
 	DeleteUser(User) error
 }
 
-func GetAllUser() (*[]User, error) {
+func GetAllUsers() (*[]User, error) {
 
 	var p *[]User
 
