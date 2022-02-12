@@ -5,21 +5,20 @@ import (
 	models "github.com/LOO2/business-remote-management-api/domain"
 )
 
-type Revenue struct {
-	models.Revenue
+type Provider struct {
+	models.Provider
+}
+type ProviderRepository interface {
+	GetAll() (*[]Provider, error)
+	GetById() (*Provider, error)
+	Create(Provider) (*Provider, error)
+	Update(Provider) (*Provider, error)
+	Delete(Provider) error
 }
 
-type RevenueRepository interface {
-	GetAllRevenues() (*[]Revenue, error)
-	GetRevenueById() (*Revenue, error)
-	CreateRevenue(Revenue) (*Revenue, error)
-	UpdateRevenue(Revenue) (*Revenue, error)
-	DeleteRevenue(Revenue) error
-}
+func GetAllProviders() (*[]Provider, error) {
 
-func GetAllRevenues() (*[]Revenue, error) {
-
-	var p *[]Revenue
+	var p *[]Provider
 
 	db := database.GetDatabase()
 
@@ -32,9 +31,9 @@ func GetAllRevenues() (*[]Revenue, error) {
 	return p, nil
 }
 
-func GetRevenueById(id int) (*Revenue, error) {
+func GetByIdProvider(id int) (*Provider, error) {
 
-	var p *Revenue
+	var p *Provider
 
 	db := database.GetDatabase()
 
@@ -46,7 +45,7 @@ func GetRevenueById(id int) (*Revenue, error) {
 	return p, nil
 }
 
-func CreateRevenue(new *Revenue) error {
+func CreateProvider(new *Provider) error {
 
 	db := database.GetDatabase()
 	err := db.Create(&new).Error
@@ -57,7 +56,7 @@ func CreateRevenue(new *Revenue) error {
 	return nil
 }
 
-func UpdateRevenue(new *Revenue) error {
+func UpdateProvider(new *Provider) error {
 
 	db := database.GetDatabase()
 	err := db.Save(&new).Error
@@ -69,7 +68,7 @@ func UpdateRevenue(new *Revenue) error {
 
 }
 
-func DeleteRevenue(new Revenue, id int) error {
+func DeleteProvider(new Provider, id int) error {
 
 	db := database.GetDatabase()
 	err := db.Delete(&new, id).Error

@@ -29,7 +29,7 @@ func NewRevenueHandler(c *gin.Engine) {
 
 func ShowAllRevenues(c *gin.Context) {
 
-	result, err := repository.GetAll()
+	result, err := repository.GetAllRevenues()
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot find revenue " + err.Error(),
@@ -50,7 +50,7 @@ func ShowRevenue(c *gin.Context) {
 		return
 	}
 
-	result, err := repository.GetById(newid)
+	result, err := repository.GetRevenueById(newid)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"error": "cannot find revenue by ID: " + err.Error(),
@@ -76,7 +76,7 @@ func CreateRevenue(c *gin.Context) {
 	total := p.Debit + p.Delivery + p.Credit + p.Voucher
 	p.Total = total
 
-	err = repository.Create(p)
+	err = repository.CreateRevenue(p)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot create revenue: " + err.Error(),
@@ -84,7 +84,7 @@ func CreateRevenue(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, p)
+	c.JSON(http.StatusCreated, p)
 }
 
 func UpdateRevenue(c *gin.Context) {
@@ -99,7 +99,7 @@ func UpdateRevenue(c *gin.Context) {
 		return
 	}
 
-	err = repository.Update(p)
+	err = repository.UpdateRevenue(p)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot update revenue: " + err.Error(),
@@ -121,7 +121,7 @@ func DeleteRevenue(c *gin.Context) {
 		return
 	}
 
-	err = repository.Delete(repository.Revenue{}, newid)
+	err = repository.DeleteRevenue(repository.Revenue{}, newid)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"error": "cannot find revenue by id: " + err.Error(),
@@ -129,5 +129,5 @@ func DeleteRevenue(c *gin.Context) {
 		return
 	}
 
-	c.Status(http.StatusCreated)
+	c.Status(http.StatusNoContent)
 }

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"context"
 	"time"
 
 	"gorm.io/gorm"
@@ -16,12 +15,4 @@ type Provider struct {
 	CreatedAt time.Time      `json:"-"`
 	UpdatedAt time.Time      `json:"-"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
-}
-
-type ProviderUsecase interface {
-	GetByID(ctx context.Context, id int64) (Provider, error)
-}
-
-type ProviderRepository interface {
-	GetByID(ctx context.Context, id int64) (Provider, error)
 }

@@ -4,49 +4,26 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/LOO2/business-remote-management-api/database"
-	models "github.com/LOO2/business-remote-management-api/domain"
+	"github.com/LOO2/business-remote-management-api/repository"
 	"github.com/gin-gonic/gin"
 )
 
-// represent the httphandler
-type ProviderHandler struct {
-	AUsecase models.ProviderUsecase
-}
-
-// will initialize the resources endpoint
-func NewProviderHandler(c *gin.Engine) {
-	//handler := &RevenueHandler{}
-
-	groupRoute := c.Group("/api")
-	{
-		revenueRoute := groupRoute.Group("revenue")
-		{
-			revenueRoute.GET("/", ShowAllProviders)
-		}
-	}
-
-}
-
 func ShowAllProviders(c *gin.Context) {
-	db := database.GetDatabase()
-	var p []models.Provider
-	err := db.Find(&p).Error
 
+	result, err := repository.GetAllProviders()
 	if err != nil {
-		c.JSON(404, gin.H{
-			"error": "cannot find provider by id: " + err.Error(),
+		c.JSON(400, gin.H{
+			"error": "cannot find provider " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, p)
+	c.JSON(http.StatusOK, result)
 }
 
-func ShowProviders(c *gin.Context) {
+func ShowProvider(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
-
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot bind JSON: " + err.Error(),
@@ -54,24 +31,20 @@ func ShowProviders(c *gin.Context) {
 		return
 	}
 
-	db := database.GetDatabase()
-	var p models.Provider
-	err = db.First(&p, newid).Error
-
+	result, err := repository.GetByIdProvider(newid)
 	if err != nil {
 		c.JSON(404, gin.H{
-			"error": "cannot find provider by id: " + err.Error(),
+			"error": "cannot find provider by ID: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, result)
 }
 
 func CreateProvider(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.Provider
+	var p *repository.Provider
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -81,7 +54,7 @@ func CreateProvider(c *gin.Context) {
 		return
 	}
 
-	err = db.Create(&p).Error
+	err = repository.CreateProvider(p)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot create provider: " + err.Error(),
@@ -89,13 +62,12 @@ func CreateProvider(c *gin.Context) {
 		return
 	}
 
-	c.JSON(201, p)
+	c.JSON(http.StatusCreated, p)
 }
 
 func UpdateProvider(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.Provider
+	var p *repository.Provider
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -105,15 +77,15 @@ func UpdateProvider(c *gin.Context) {
 		return
 	}
 
-	err = db.Save(&p).Error
+	err = repository.UpdateProvider(p)
 	if err != nil {
-		c.JSON(404, gin.H{
-			"error": "cannot update provider by ID: " + err.Error(),
+		c.JSON(400, gin.H{
+			"error": "cannot update provider: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, p)
 }
 
 func DeleteProvider(c *gin.Context) {
@@ -122,15 +94,12 @@ func DeleteProvider(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "ID has to be integer",
+			"error": "cannot bind JSON: " + err.Error(),
 		})
 		return
 	}
 
-	db := database.GetDatabase()
-
-	err = db.Delete(&models.Provider{}, newid).Error
-
+	err = repository.DeleteProvider(repository.Provider{}, newid)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"error": "cannot find provider by id: " + err.Error(),
@@ -138,5 +107,5 @@ func DeleteProvider(c *gin.Context) {
 		return
 	}
 
-	c.Status(204)
+	c.Status(http.StatusNoContent)
 }

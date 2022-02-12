@@ -9,25 +9,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// represent the httphandler
-type UserHandler struct {
-	AUsecase models.ProviderUsecase
-}
-
-// will initialize the resources endpoint
-func NewUserHandler(c *gin.Engine) {
-	//handler := &RevenueHandler{}
-
-	groupRoute := c.Group("/api")
-	{
-		revenueRoute := groupRoute.Group("revenue")
-		{
-			revenueRoute.GET("/", ShowAllUsers)
-		}
-	}
-
-}
-
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err

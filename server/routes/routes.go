@@ -29,7 +29,7 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 		provider := main.Group("provider")
 		{
 			provider.GET("/", delivery.ShowAllProviders)
-			provider.GET("/:id", delivery.ShowProviders)
+			provider.GET("/:id", delivery.ShowProvider)
 			provider.POST("/", delivery.CreateProvider)
 			provider.PUT("/", delivery.UpdateProvider)
 			provider.DELETE("/:id", delivery.DeleteProvider)
