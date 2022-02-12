@@ -1,78 +1,50 @@
 package delivery
 
 import (
+	"net/http"
 	"strconv"
 
-	"github.com/LOO2/business-remote-management-api/database"
-	models "github.com/LOO2/business-remote-management-api/domain"
+	"github.com/LOO2/business-remote-management-api/repository"
 	"github.com/gin-gonic/gin"
 )
 
-// represent the httphandler
-type CostHandler struct {
-	AUsecase models.CostUsecase
-}
-
-// will initialize the resources endpoint
-func NewCostHandler(c *gin.Engine) {
-	//handler := &CostHandler{}
-
-	groupRoute := c.Group("/api")
-	{
-		costRoute := groupRoute.Group("revenue")
-		{
-			costRoute.GET("/", ShowAllCosts)
-		}
-	}
-
-}
-
 func ShowAllCosts(c *gin.Context) {
 
-	db := database.GetDatabase()
-	var p []models.Cost
-	err := db.Preload("CostCategory").Preload("CostProvider").Find(&p).Error
-	//err := db.Find(&p).Error
-
+	result, err := repository.GetAllCosts()
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find cost: " + err.Error(),
+			"error": "cannot find Cost " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, result)
 }
 
 func ShowCost(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
-
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "ID has to be integer",
+			"error": "cannot bind JSON: " + err.Error(),
 		})
 		return
 	}
 
-	db := database.GetDatabase()
-	var p models.Cost
-	err = db.Preload("CostCategory").Preload("CostProvider").First(&p, newid).Error
-
+	result, err := repository.GetCostByIdCost(newid)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot find cost by id: " + err.Error(),
+		c.JSON(404, gin.H{
+			"error": "cannot find Cost by ID: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, result)
 }
 
 func CreateCost(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.Cost
+	var p *repository.Cost
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -82,21 +54,20 @@ func CreateCost(c *gin.Context) {
 		return
 	}
 
-	err = db.Create(&p).Error
+	err = repository.CreateCost(p)
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create cost: " + err.Error(),
+			"error": "cannot create Cost: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusCreated, p)
 }
 
 func UpdateCost(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.Cost
+	var p *repository.Cost
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -106,15 +77,15 @@ func UpdateCost(c *gin.Context) {
 		return
 	}
 
-	err = db.Save(&p).Error
+	err = repository.UpdateCost(p)
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create cost: " + err.Error(),
+			"error": "cannot update Cost: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, p)
 }
 
 func DeleteCost(c *gin.Context) {
@@ -123,21 +94,18 @@ func DeleteCost(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "ID has to be integer",
+			"error": "cannot bind JSON: " + err.Error(),
 		})
 		return
 	}
 
-	db := database.GetDatabase()
-
-	err = db.Delete(&models.Cost{}, newid).Error
-
+	err = repository.DeleteCost(repository.Cost{}, newid)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot delete cost: " + err.Error(),
+		c.JSON(404, gin.H{
+			"error": "cannot find Cost by id: " + err.Error(),
 		})
 		return
 	}
 
-	c.Status(204)
+	c.Status(http.StatusNoContent)
 }
