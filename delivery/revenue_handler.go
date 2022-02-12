@@ -12,27 +12,26 @@ import (
 
 // RevenueHandler  represent the httphandler for revenue
 type RevenueHandler struct {
-	AUsecase models.RevenueUsecase
+	//AUsecase models.RevenueUsecase
 }
 
 // NewRevenueleHandler will initialize the revenue/ resources endpoint
 func NewRevenueHandler(c *gin.Engine) {
 	//handler := &RevenueHandler{}
 
-	groupRoute := c.Group("/api")
-	{
-		revenueRoute := groupRoute.Group("revenue")
-		{
-			revenueRoute.GET("/", GetAll)
-		}
-	}
+	//groupRoute := c.Group("/api")
+	//{
+	//	revenueRoute := groupRoute.Group("revenue")
+	//	{
+	//		revenueRoute.GET("/", GetAll)
+	//	}
+	//}
 
 }
 
-func GetAll(c *gin.Context) {
+func ShowAllRevenues(c *gin.Context) {
 
 	result, err := repository.GetAll()
-
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot find revenue " + err.Error(),
@@ -46,7 +45,6 @@ func GetAll(c *gin.Context) {
 func ShowRevenue(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
-
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot bind JSON: " + err.Error(),
@@ -55,7 +53,6 @@ func ShowRevenue(c *gin.Context) {
 	}
 
 	result, err := repository.GetById(newid)
-
 	if err != nil {
 		c.JSON(404, gin.H{
 			"error": "cannot find revenue by ID: " + err.Error(),
@@ -67,9 +64,8 @@ func ShowRevenue(c *gin.Context) {
 }
 
 func CreateRevenue(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.Revenue
+	var p *repository.Revenue
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -79,7 +75,11 @@ func CreateRevenue(c *gin.Context) {
 		return
 	}
 
-	err = db.Create(&p).Error
+	total := p.Debit + p.Delivery + p.Credit + p.Voucher
+
+	p.Total = total
+
+	err = repository.Create(p)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "cannot create revenue: " + err.Error(),
