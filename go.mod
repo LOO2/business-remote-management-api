@@ -3,7 +3,6 @@ module github.com/LOO2/business-remote-management-api
 go 1.16
 
 require (
-	github.com/aklinkert/go-logging v1.2.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
