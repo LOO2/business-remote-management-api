@@ -1,76 +1,50 @@
 package delivery
 
 import (
+	"net/http"
 	"strconv"
 
-	"github.com/LOO2/business-remote-management-api/database"
-	models "github.com/LOO2/business-remote-management-api/domain"
+	"github.com/LOO2/business-remote-management-api/repository"
 	"github.com/gin-gonic/gin"
 )
 
-// represent the httphandler
-type CostCategoryHandler struct {
-	AUsecase models.CostCategoryUsecase
-}
-
-// will initialize the resources endpoint
-func NewCostCategoryHandler(c *gin.Engine) {
-	//handler := &CostCategoryHandler{}
-
-	groupRoute := c.Group("/api")
-	{
-		revenueRoute := groupRoute.Group("cost_category")
-		{
-			revenueRoute.GET("/", ShowAllProviders)
-		}
-	}
-
-}
-
 func ShowAllCostCategories(c *gin.Context) {
-	db := database.GetDatabase()
-	var p []models.CostCategory
-	err := db.Find(&p).Error
 
+	result, err := repository.GetAllCostCategories()
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find revenue: " + err.Error(),
+			"error": "cannot find CostCategory " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, result)
 }
 
 func ShowCostCategory(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
-
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "ID has to be integer",
+			"error": "cannot bind JSON: " + err.Error(),
 		})
 		return
 	}
 
-	db := database.GetDatabase()
-	var p models.CostCategory
-	err = db.First(&p, newid).Error
-
+	result, err := repository.GetByIdCostCategory(newid)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot find cost category by id: " + err.Error(),
+		c.JSON(404, gin.H{
+			"error": "cannot find CostCategory by ID: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, result)
 }
 
 func CreateCostCategory(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.CostCategory
+	var p *repository.CostCategory
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -80,21 +54,20 @@ func CreateCostCategory(c *gin.Context) {
 		return
 	}
 
-	err = db.Create(&p).Error
+	err = repository.CreateCostCategory(p)
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create cost category: " + err.Error(),
+			"error": "cannot create CostCategory: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(201, p)
+	c.JSON(http.StatusCreated, p)
 }
 
 func UpdateCostCategory(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.CostCategory
+	var p *repository.CostCategory
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -104,15 +77,15 @@ func UpdateCostCategory(c *gin.Context) {
 		return
 	}
 
-	err = db.Save(&p).Error
+	err = repository.UpdateCostCategory(p)
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create cost category: " + err.Error(),
+			"error": "cannot update CostCategory: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, p)
 }
 
 func DeleteCostCategory(c *gin.Context) {
@@ -121,21 +94,18 @@ func DeleteCostCategory(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "ID has to be integer",
+			"error": "cannot bind JSON: " + err.Error(),
 		})
 		return
 	}
 
-	db := database.GetDatabase()
-
-	err = db.Delete(&models.CostCategory{}, newid).Error
-
+	err = repository.DeleteCostCategory(repository.CostCategory{}, newid)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot delete cost category: " + err.Error(),
+		c.JSON(404, gin.H{
+			"error": "cannot find CostCategory by id: " + err.Error(),
 		})
 		return
 	}
 
-	c.Status(204)
+	c.Status(http.StatusNoContent)
 }
