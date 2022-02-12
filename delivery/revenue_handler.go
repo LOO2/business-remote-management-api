@@ -4,8 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/LOO2/business-remote-management-api/database"
-	models "github.com/LOO2/business-remote-management-api/domain"
 	"github.com/LOO2/business-remote-management-api/repository"
 	"github.com/gin-gonic/gin"
 )
@@ -76,7 +74,6 @@ func CreateRevenue(c *gin.Context) {
 	}
 
 	total := p.Debit + p.Delivery + p.Credit + p.Voucher
-
 	p.Total = total
 
 	err = repository.Create(p)
@@ -91,9 +88,8 @@ func CreateRevenue(c *gin.Context) {
 }
 
 func UpdateRevenue(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.Revenue
+	var p *repository.Revenue
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -103,10 +99,10 @@ func UpdateRevenue(c *gin.Context) {
 		return
 	}
 
-	err = db.Save(&p).Error
+	err = repository.Update(p)
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot save revenue: " + err.Error(),
+			"error": "cannot update revenue: " + err.Error(),
 		})
 		return
 	}
@@ -125,9 +121,8 @@ func DeleteRevenue(c *gin.Context) {
 		return
 	}
 
-	db := database.GetDatabase()
-
-	err = db.Delete(&models.Revenue{}, newid).Error
+	err = repository.Delete(repository.Revenue{}, newid)
+	//err = db.Delete(&models.Revenue{}, newid).Error
 
 	if err != nil {
 		c.JSON(404, gin.H{

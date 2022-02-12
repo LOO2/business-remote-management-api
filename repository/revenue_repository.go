@@ -13,6 +13,8 @@ type RevenueRepository interface {
 	GetAll() (*[]Revenue, error)
 	GetById() (*Revenue, error)
 	Create(Revenue) (*Revenue, error)
+	Update(Revenue) (*Revenue, error)
+	Delete(Revenue) (*Revenue, error)
 }
 
 func GetAll() (*[]Revenue, error) {
@@ -48,6 +50,29 @@ func Create(new *Revenue) error {
 
 	db := database.GetDatabase()
 	err := db.Create(&new).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func Update(new *Revenue) error {
+
+	db := database.GetDatabase()
+	err := db.Save(&new).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func Delete(new Revenue, id int) error {
+
+	db := database.GetDatabase()
+	err := db.Delete(&new, id).Error
 	if err != nil {
 		return err
 	}
