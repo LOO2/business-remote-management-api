@@ -62,7 +62,7 @@ func CreateProvider(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, p)
+	c.JSON(http.StatusCreated, p)
 }
 
 func UpdateProvider(c *gin.Context) {

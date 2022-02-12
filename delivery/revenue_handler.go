@@ -84,7 +84,7 @@ func CreateRevenue(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, p)
+	c.JSON(http.StatusCreated, p)
 }
 
 func UpdateRevenue(c *gin.Context) {
