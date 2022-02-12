@@ -10,12 +10,16 @@ type Revenue struct {
 }
 
 type RevenueRepository interface {
-	GetAll() (*Revenue, error)
+	GetAll() (*[]Revenue, error)
+	GetById() (*Revenue, error)
+	Create(Revenue) (*Revenue, error)
+	Update(Revenue) (*Revenue, error)
+	Delete(Revenue) error
 }
 
-func GetAll() (*Revenue, error) {
+func GetAll() (*[]Revenue, error) {
 
-	var p *Revenue
+	var p *[]Revenue
 
 	db := database.GetDatabase()
 
@@ -26,4 +30,53 @@ func GetAll() (*Revenue, error) {
 	}
 
 	return p, nil
+}
+
+func GetById(id int) (*Revenue, error) {
+
+	var p *Revenue
+
+	db := database.GetDatabase()
+
+	err := db.First(&p, id).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return p, nil
+}
+
+func Create(new *Revenue) error {
+
+	db := database.GetDatabase()
+	err := db.Create(&new).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func Update(new *Revenue) error {
+
+	db := database.GetDatabase()
+	err := db.Save(&new).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func Delete(new Revenue, id int) error {
+
+	db := database.GetDatabase()
+	err := db.Delete(&new, id).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+
 }
