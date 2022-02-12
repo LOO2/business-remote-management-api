@@ -1,10 +1,10 @@
 package delivery
 
 import (
+	"net/http"
 	"strconv"
 
-	"github.com/LOO2/business-remote-management-api/database"
-	models "github.com/LOO2/business-remote-management-api/domain"
+	"github.com/LOO2/business-remote-management-api/repository"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -20,60 +20,42 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 func ShowAllUsers(c *gin.Context) {
-	db := database.GetDatabase()
-	var p []models.User
-	err := db.Find(&p).Error
 
+	result, err := repository.GetAllUser()
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot find user: " + err.Error(),
+			"error": "cannot find User " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, result)
 }
 
 func ShowUser(c *gin.Context) {
 	id := c.Param("id")
 	newid, err := strconv.Atoi(id)
-
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "ID has to be integer",
+			"error": "cannot bind JSON: " + err.Error(),
 		})
 		return
 	}
 
-	db := database.GetDatabase()
-	var p models.User
-	err = db.First(&p, newid).Error
-
+	result, err := repository.GetUserById(newid)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot find user by id: " + err.Error(),
+		c.JSON(404, gin.H{
+			"error": "cannot find User by ID: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, result)
 }
 
 func CreateUser(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.User
-
-	var encriptPassword string
-
-	encriptPassword, error := HashPassword(p.Password)
-	if error != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot hash password: " + error.Error(),
-		})
-		return
-	}
-	p.Password = encriptPassword
+	var p *repository.User
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -83,21 +65,20 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	err = db.Create(&p).Error
+	err = repository.CreateUser(p)
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create user: " + err.Error(),
+			"error": "cannot create User: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusCreated, p)
 }
 
 func UpdateUser(c *gin.Context) {
-	db := database.GetDatabase()
 
-	var p models.User
+	var p *repository.User
 
 	err := c.ShouldBindJSON(&p)
 	if err != nil {
@@ -107,15 +88,15 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	err = db.Save(&p).Error
+	err = repository.UpdateUser(p)
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "cannot create user: " + err.Error(),
+			"error": "cannot update User: " + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(200, p)
+	c.JSON(http.StatusOK, p)
 }
 
 func DeleteUser(c *gin.Context) {
@@ -124,21 +105,18 @@ func DeleteUser(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(400, gin.H{
-			"error": "ID has to be integer",
+			"error": "cannot bind JSON: " + err.Error(),
 		})
 		return
 	}
 
-	db := database.GetDatabase()
-
-	err = db.Delete(&models.User{}, newid).Error
-
+	err = repository.DeleteUser(repository.User{}, newid)
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "cannot delete user: " + err.Error(),
+		c.JSON(404, gin.H{
+			"error": "cannot find User by id: " + err.Error(),
 		})
 		return
 	}
 
-	c.Status(204)
+	c.Status(http.StatusNoContent)
 }
