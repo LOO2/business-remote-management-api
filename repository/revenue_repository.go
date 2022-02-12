@@ -14,7 +14,7 @@ type RevenueRepository interface {
 	GetById() (*Revenue, error)
 	Create(Revenue) (*Revenue, error)
 	Update(Revenue) (*Revenue, error)
-	Delete(Revenue) (*Revenue, error)
+	Delete(Revenue) error
 }
 
 func GetAll() (*[]Revenue, error) {

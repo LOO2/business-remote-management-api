@@ -122,8 +122,6 @@ func DeleteRevenue(c *gin.Context) {
 	}
 
 	err = repository.Delete(repository.Revenue{}, newid)
-	//err = db.Delete(&models.Revenue{}, newid).Error
-
 	if err != nil {
 		c.JSON(404, gin.H{
 			"error": "cannot find revenue by id: " + err.Error(),
