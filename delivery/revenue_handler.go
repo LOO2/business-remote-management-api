@@ -1,6 +1,7 @@
 package delivery
 
 import (
+	"log"
 	"net/http"
 	"strconv"
 
@@ -31,6 +32,8 @@ func ShowAllRevenues(c *gin.Context) {
 
 	result, err := repository.GetAllRevenues()
 	if err != nil {
+		log.Printf("Unable to find revenues: %v\n%v", "", err)
+
 		c.JSON(400, gin.H{
 			"error": "cannot find revenue " + err.Error(),
 		})
