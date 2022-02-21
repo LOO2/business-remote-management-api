@@ -9,6 +9,7 @@ docker:
 	docker-compose up --build -d
 
 unittest:
+	docker-compose up --build -d
 	go test -short  ./...
 
 clean:
