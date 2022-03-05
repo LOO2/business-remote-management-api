@@ -1,6 +1,10 @@
 BINARY=engine
 test: 
 	go test -v -cover -covermode=atomic ./...
+	go test ./... -coverprofile coverage.out
+
+test-output: 
+	go tool cover -html=coverage.out
 
 engine:
 	go build -o ${BINARY} app/*.go

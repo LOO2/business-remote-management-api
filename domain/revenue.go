@@ -17,3 +17,7 @@ type Revenue struct {
 	UpdatedAt time.Time      `json:"updated"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deleted"`
 }
+
+func NewRevenue() Revenue {
+	return Revenue{}
+}
