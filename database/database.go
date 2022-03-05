@@ -12,7 +12,7 @@ import (
 
 var db *gorm.DB
 
-func StartDB() {
+func StartDB() error {
 	str := "host=localhost port=25432 user=admin dbname=books sslmode=disable password=123456"
 
 	database, err := gorm.Open(postgres.Open(str), &gorm.Config{})
@@ -20,6 +20,7 @@ func StartDB() {
 	if err != nil {
 		fmt.Println("Could not connect to the Postgres Database")
 		log.Fatal("Error: ", err)
+		return err
 	}
 
 	db = database
@@ -29,6 +30,8 @@ func StartDB() {
 	config.SetConnMaxLifetime(time.Hour)
 
 	migrations.RunMigrations(db)
+
+	return nil
 }
 
 func CloseConn() error {

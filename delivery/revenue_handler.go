@@ -34,7 +34,6 @@ func ShowAllRevenues(c *gin.Context) {
 		c.JSON(400, gin.H{
 			"error": "cannot find revenue " + err.Error(),
 		})
-		return
 	}
 
 	c.JSON(http.StatusOK, result)

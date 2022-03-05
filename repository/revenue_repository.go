@@ -10,16 +10,16 @@ type Revenue struct {
 }
 
 type RevenueRepository interface {
-	GetAllRevenues() (*[]Revenue, error)
+	GetAllRevenues() ([]Revenue, error)
 	GetRevenueById() (*Revenue, error)
 	CreateRevenue(Revenue) (*Revenue, error)
 	UpdateRevenue(Revenue) (*Revenue, error)
 	DeleteRevenue(Revenue) error
 }
 
-func GetAllRevenues() (*[]Revenue, error) {
+func GetAllRevenues() ([]Revenue, error) {
 
-	var p *[]Revenue
+	var p []Revenue
 
 	db := database.GetDatabase()
 
