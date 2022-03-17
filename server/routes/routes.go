@@ -2,10 +2,19 @@ package routes
 
 import (
 	"github.com/LOO2/business-remote-management-api/delivery"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
+
+	// same as
+	// config := cors.DefaultConfig()
+	// config.AllowAllOrigins = true
+	// router.Use(cors.New(config))
+	router.Use(cors.Default())
+	router.Run()
+
 	main := router.Group("/api")
 	{
 		revenue := main.Group("revenue")
