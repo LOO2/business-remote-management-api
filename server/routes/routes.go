@@ -9,10 +9,9 @@ import (
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
 
 	// same as
-	// config := cors.DefaultConfig()
-	// config.AllowAllOrigins = true
-	// router.Use(cors.New(config))
-	router.Use(cors.Default())
+	config := cors.DefaultConfig()
+	config.AllowAllOrigins = true
+	router.Use(cors.New(config))
 	router.Run()
 
 	main := router.Group("/api")
