@@ -1,7 +1,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: Nome do Serviço
+  name: nome
   description: API Description.
   tags:
     - go
@@ -9,4 +9,4 @@ metadata:
 spec:
   type: service
   lifecycle: production
-  owner: Teste Team
+  owner: team
