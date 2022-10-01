@@ -1,12 +1,12 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: replace-me
-  description: Replace me with a real description.
+  name: Nome do Serviço
+  description: API Description.
   tags:
     - go
-    - website
+    - service
 spec:
   type: service
   lifecycle: production
-  owner: your-team
+  owner: Teste Team
