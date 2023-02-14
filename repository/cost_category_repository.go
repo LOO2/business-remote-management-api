@@ -10,7 +10,7 @@ type CostCategory struct {
 }
 type CostCategoryRepository interface {
 	GetAllCostCategories() (*[]CostCategory, error)
-	GetostCategoryByIdC() (*CostCategory, error)
+	GetCostCategoryByID() (*CostCategory, error)
 	CreateCostCategory(CostCategory) (*CostCategory, error)
 	UpdateCostCategory(CostCategory) (*CostCategory, error)
 	DeleteCostCategory(CostCategory) error
@@ -31,7 +31,7 @@ func GetAllCostCategories() (*[]CostCategory, error) {
 	return p, nil
 }
 
-func GetostCategoryByIdC(id int) (*CostCategory, error) {
+func GetCostCategoryByID(id int) (*CostCategory, error) {
 
 	var p *CostCategory
 
